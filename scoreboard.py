@@ -17,6 +17,7 @@ class Scoreboard(Turtle):
         self.penup()
         self.goto(x=X_POS, y=Y_POS)
         self.hideturtle()
+        self.get_high_score()
         self.refresh()
 
     def increment_score(self):
@@ -26,9 +27,19 @@ class Scoreboard(Turtle):
     def refresh(self):
         self.clear()
         self.write(
-            f"Score: {self.score}", align=ALIGNMENT, font=(FONT, FONT_SIZE, FONT_WEIGHT)
+            f"Score: {self.score} High Score: {self.high_score}",
+            align=ALIGNMENT,
+            font=(FONT, FONT_SIZE, FONT_WEIGHT),
         )
 
-    def game_over(self):
-        self.goto(0, 0)
-        self.write("Game Over", align=ALIGNMENT, font=(FONT, FONT_SIZE, FONT_WEIGHT))
+    def reset(self):
+        if self.score > self.high_score:
+            with open("data.txt", mode="w") as file:
+                file.write(f"{self.score}")
+        self.score = 0
+        self.get_high_score()
+        self.refresh()
+
+    def get_high_score(self):
+        with open("data.txt") as file:
+            self.high_score = int(file.read())
